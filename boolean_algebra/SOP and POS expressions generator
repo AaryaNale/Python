@@ -1,0 +1,57 @@
+def generateSOP(variables, minTerms):
+    sop_terms = []
+
+    # Create a function to convert a minterm to a term
+    def minterm_to_term(minterm):
+        term = []
+        minterm = int(minterm)  # Convert minterm to an integer
+        for i, var in enumerate(variables):
+            # Check if the i-th bit of the minterm is 0
+            if (minterm >> i) & 1 == 0:
+                term.append(f"!{var}")  # Append negated variable if bit is 0
+            else:
+                term.append(var)       # Append variable if bit is 1
+        return " & ".join(term)       # Combine variables with AND operator
+
+    for minterm in minTerms:
+        term = minterm_to_term(minterm)
+        sop_terms.append(f"({term})")  # Enclose each term in parentheses
+
+    sopExpression = " | ".join(sop_terms)  # Combine terms with OR operator
+    return sopExpression
+
+def generatePOS(variables, maxTerms):
+    pos_terms = []
+
+    # Create a function to convert a maxterm to a term
+    def maxterm_to_term(maxterm):
+        term = []
+        maxterm = int(maxterm)  # Convert maxterm to an integer
+        for i, var in enumerate(variables):
+            # Check if the i-th bit of the maxterm is 0
+            if (maxterm >> i) & 1 == 0:
+                term.append(var)       # Append variable if bit is 0
+            else:
+                term.append(f"!{var}")  # Append negated variable if bit is 1
+        return " | ".join(term)       # Combine variables with OR operator
+
+    for maxterm in maxTerms:
+        term = maxterm_to_term(maxterm)
+        pos_terms.append(f"({term})")  # Enclose each term in parentheses
+
+    posExpression = " & ".join(pos_terms)  # Combine terms with AND operator
+    return posExpression
+
+# Example usage:
+
+inputVariables = input("Enter a list of space-separated variables: ")
+variables = inputVariables.split()
+inputMinterms = input("Enter a list of space-separated minterms: ")
+minTerms = inputMinterms.split()
+inputMaxterms = input("Enter a list of space-separated maxterms: ")
+maxTerms = inputMaxterms.split()
+sopExpression = generateSOP(variables, minTerms)
+posExpression = generatePOS(variables, maxTerms)
+
+print("SOP Expression:", sopExpression)
+print("POS Expression:", posExpression)
